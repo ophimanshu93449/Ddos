@@ -24,7 +24,7 @@ client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
 db = client['anxx']
 users_collection = db.users
 
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot('7390699440:AAHJcbhKoL6QN4tjbCfrilQowAwka_eSCBE')
 REQUEST_INTERVAL = 1
 
 blocked_ports = [8700, 20000, 443, 17500, 9031, 20002, 20001]
@@ -232,4 +232,5 @@ if __name__ == "__main__":
         except Exception as e:
             logging.error(f"An error occurred while polling: {e}")
         logging.info(f"Waiting for {REQUEST_INTERVAL} seconds before the next request...")
+
         time.sleep(REQUEST_INTERVAL)

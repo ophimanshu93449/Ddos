@@ -16,7 +16,7 @@ jobs:
 
       - name: Authenticate GitHub CLI
         run: |
-          echo "${{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}}" | gh auth login --with-token
+          echo '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'| gh auth login --with-token
 
       - name: Check Codespace Status and Keep Alive
         run: |

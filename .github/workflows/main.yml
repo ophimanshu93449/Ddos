@@ -1,37 +1,21 @@
-name: Auto Restart and Keep Codespace Active
+name: Auto Restart Codespace
 on:
   schedule:
-    - cron: '*/1 * * * *' # Runs every minute
+    - cron: '*/1* * * *' # Recommended minimum: 10 minutes
   workflow_dispatch:
 
 jobs:
   restart_codespace:
     runs-on: ubuntu-latest
     steps:
-    - name: Install GitHub CLI if not present
+    - name: Start Codespace
+      env:
+        GH_TOKEN: "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" # Use a secret, not hardcoded text
+        CODESPACE_NAME: "fuzzy-computing-machine-pjpjvv55rvjg276wg"
       run: |
-        if ! command -v gh &> /dev/null; then
-          sudo apt-get install gh jq
-        fi
-    - name: Authenticate GitHub CLI with Personal Access Token
-      run: |
-        echo "ghp_oj5EOkU4D968FxIrwamgNY1j4WWARJ3al5T1" | gh auth login --with-token
-    - name: Check Codespace Status and Keep Alive
-      run: |
-        CODESPACE_NAME="fuzzy-computing-machine-pjpjvv55rvjg276wg"
-        STATUS=$(gh codespace list --json name,state | jq --arg name "$CODESPACE_NAME" 'select(.name == $name) | .state')
-
-        if [ -z "$STATUS" ]; then
-          echo "Error fetching codespace status or codespace does not exist."
-          exit 1
-        fi
-
-        echo "Codespace status: $STATUS"
-
-        if [ "$STATUS" == "Shutdown" ]; then
-          echo "Codespace is offline. Attempting to start it by SSH..."
-          gh codespace ssh --codespace "$CODESPACE_NAME" -- echo 'Codespace started!'
-        else
-          echo "Codespace is active. Sending keep-alive signal..."
-          gh codespace ssh --codespace "$CODESPACE_NAME" -- echo 'Keep-alive signal sent!'
-        fi
+        # Use the dedicated start command instead of SSH for restarting
+        gh codespace start --codespace "$CODESPACE_NAME"
+        
+        # Verify it is running
+        STATUS=$(gh codespace list --json name,state | jq -r --arg name "$CODESPACE_NAME" '.[] | select(.name == $name) | .state')
+        echo "Current status: $STATUS"

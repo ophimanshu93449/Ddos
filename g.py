@@ -16,7 +16,7 @@ loop = asyncio.get_event_loop()
 
 TOKEN = '8373103943:AAGcCj4y9JmmQvZGwoektVshuYuehdXQ9X4' #Enter_Bot_Token_within_the_colons
 MONGO_URI = 'mongodb://atlas-sql-695a0db568d14341efe3d88a-ct7hvs.a.query.mongodb.net/sample_mflix?ssl=true&authSource=admin'
-FORWARD_CHANNEL_ID = -8417161342   
+FORWARD_CHANNEL_ID = 8417161342   
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
@@ -232,4 +232,5 @@ if __name__ == "__main__":
         except Exception as e:
             logging.error(f"An error occurred while polling: {e}")
         logging.info(f"Waiting for {REQUEST_INTERVAL} seconds before the next request...")
+
         time.sleep(REQUEST_INTERVAL)

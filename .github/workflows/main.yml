@@ -1,21 +1,18 @@
-name: Auto Restart Codespace
+name: 24-7 Codespace Keep-Alive
 on:
   schedule:
-    - cron: '*/1* * * *' # Recommended minimum: 10 minutes
-  workflow_dispatch:
+    # Runs every 2 hours to prevent the 4-hour max timeout
+    - cron: '0 */2 * * *'
+  workflow_dispatch: # Allows manual trigger
 
 jobs:
-  restart_codespace:
+  ping-codespace:
     runs-on: ubuntu-latest
     steps:
-    - name: Start Codespace
-      env:
-        GH_TOKEN: "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" # Use a secret, not hardcoded text
-        CODESPACE_NAME: "fuzzy-computing-machine-pjpjvv55rvjg276wg"
-      run: |
-        # Use the dedicated start command instead of SSH for restarting
-        gh codespace start --codespace "$CODESPACE_NAME"
-        
-        # Verify it is running
-        STATUS=$(gh codespace list --json name,state | jq -r --arg name "$CODESPACE_NAME" '.[] | select(.name == $name) | .state')
-        echo "Current status: $STATUS"
+      - name: Restart Specific Codespace
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          CODESPACE_NAME: "jubilant-telegram-97jwr5jj47wp2977"
+        run: |
+          echo "Starting codespace: $CODESPACE_NAME"
+          gh codespace rebuild --codespace $CODESPACE_NAME
